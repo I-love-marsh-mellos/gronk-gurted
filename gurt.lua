@@ -5,6 +5,7 @@ local input = gurt.select('#input')
 local history = {}
 local inputBar = gurt.select("#input-bar");
 local chat = gurt.select('#chat')
+local inputFocused = false;
 
 -- all messages live in here
 local allMessages = {}
@@ -98,6 +99,32 @@ send:on('click', function()
         sendMessage(query)
         input.value = '' -- clear input
     end
+end)
+
+local keys = {}
+
+gurt.body:on('keydown', function(event)
+    if inputFocused then
+        if event.key == "Enter" and not event.shift then
+            local query = input.value
+            if query ~= '' then
+                sendMessage(query)
+                input.value = ''
+            end
+        end
+    end
+end)
+
+gurt.body:on('keyup', function(event)
+    keys[event.key] = false
+end)
+
+input:on('focusin', function()
+    inputFocused = true
+end)
+
+input:on('focusout', function()
+    inputFocused = false
 end)
 
 clearChat:on('click', function()
