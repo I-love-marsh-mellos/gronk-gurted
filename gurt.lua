@@ -3,7 +3,7 @@ local send = gurt.select('#send')
 local input = gurt.select('#input')
 local history = {}
 local inputBar = gurt.select("#input-bar");
-
+local busy = false;
 local chat = gurt.select('#chat')
 
 -- all messages live in here
@@ -70,6 +70,8 @@ function sendMessage(prompt)
                 assistant(pollData.tokens)
             end
             if pollData.done then
+                busy = false
+                send.setAttribute("disabled", busy)
                 table.insert(history, { role = "assistant", content = pollData.tokens })
                 clearInterval(intervalId)
                 trace.log("Finished " .. pollData.tokens)
@@ -83,6 +85,9 @@ end
 
 
 send:on('click', function()
+    if (busy) return
+    busy = true
+    send.setAttribute("disabled", busy)
     local query = input.value
     if query ~= '' then
         sendMessage(query)
