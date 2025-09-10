@@ -44,6 +44,9 @@ function sendMessage(prompt)
     appendMessage("user", prompt, false)
     table.insert(history, { role = "user", content = prompt })
 
+    local assistant = appendMessage("assistant", "", true)
+    assistant("thinking")
+
     local server = "https://s.73206141212.com:23100"
     local response = fetch(server .. "/submit", {
         method = "POST",
@@ -53,14 +56,12 @@ function sendMessage(prompt)
 
     if not response:ok() then
         trace.log("Submit failed: " .. response.status)
+        assistant("Unable to contact server " .. response.status)
         return
     end
 
     local data = response:json()
     local jobId = data.jobId
-
-    local assistant = appendMessage("assistant", "", true)
-    assistant("thinking")
 
     local done = false
     intervalId = setInterval(function()
@@ -85,6 +86,7 @@ function sendMessage(prompt)
             end
         else
             trace.log("Poll failed: " .. pollResp.status)
+            assistant("Unable to contact server")
         end
     end, 100)
 end
