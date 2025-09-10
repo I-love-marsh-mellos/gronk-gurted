@@ -1,5 +1,6 @@
 -- keep chat history in memory
 local send = gurt.select('#send')
+local clearChat = gurt.select('#clear-chat')
 local input = gurt.select('#input')
 local history = {}
 local inputBar = gurt.select("#input-bar");
@@ -31,12 +32,12 @@ function appendMessage(role, text, streaming)
     end
 end
 
-function countNewlines(str)
-    local count = 0
-    for _ in str:gmatch("\n") do
-        count = count + 1
+local h = gurt.crumbs.get("history")
+if h ~= nil then
+    history = JSON.parse(h)
+    for _, m in ipairs(history) do
+        appendMessage(m.role, m.content, false)
     end
-    return count
 end
 
 function sendMessage(prompt)
@@ -61,6 +62,7 @@ function sendMessage(prompt)
     local assistant = appendMessage("assistant", "", true)
     assistant("thinking")
 
+    local done = false
     intervalId = setInterval(function()
         local pollResp = fetch(server .. "/poll/" .. jobId)
         if pollResp:ok() then
@@ -68,11 +70,18 @@ function sendMessage(prompt)
             if pollData.tokens then
                 assistant(pollData.tokens)
             end
-            if pollData.done then
-                table.insert(history, { role = "assistant", content = pollData.tokens })
-                clearInterval(intervalId)
-                trace.log("Finished " .. pollData.tokens)
-                assistant(pollData.tokens)
+            if pollData.done and not done then
+                if (not done) then
+                    table.insert(history, { role = "assistant", content = pollData.tokens })
+                    clearInterval(intervalId)
+                    trace.log("Finished " .. pollData.tokens)
+                    assistant(pollData.tokens)
+                    gurt.crumbs.set({
+                        name = "history", 
+                        value = JSON.stringify(history),
+                    })
+                end
+                done = true
             end
         else
             trace.log("Poll failed: " .. pollResp.status)
@@ -87,4 +96,12 @@ send:on('click', function()
         sendMessage(query)
         input.value = '' -- clear input
     end
+end)
+
+clearChat:on('click', function()
+    if (clearChat.text == "Click againg to confirm") then
+        gurt.crumbs.delete("history")
+        gurt.location.reload();
+    end
+    clearChat.text = "Click againg to confirm"
 end)
