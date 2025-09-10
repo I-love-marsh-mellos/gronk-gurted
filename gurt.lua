@@ -80,7 +80,7 @@ function sendMessage(prompt)
         else
             trace.log("Poll failed: " .. pollResp.status)
         end
-    end, 200)
+    end, 100)
 end
 
 
