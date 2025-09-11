@@ -7,8 +7,7 @@
       flex flex-col h-full bg-[#111827] text-white font-sans
     }
     #chat {
-      flex-grow-1 p-4 flex flex-col gap-4 overflow-y-scroll
-      h-[64]
+      p-4 gap-4
     }
     #input-bar {
       flex flex-row gap-2 p-4 border-t border-[#374151] bg-[#1f2937]
@@ -21,7 +20,7 @@
 </head>
 
 <body style="h-full w-full">
-  <p id="chat" style="h-46 m-4">_</p>
+  <pre id="chat" style="h-46 m-4">_</pre>
   <!-- DO NOT REMOVE THAT UNDERSCORE OVER THERE, gurted quirks -->
   <div id="input-bar" style="">
     <input id="input" type="text" placeholder="Type a message..." style="w-[140%] h-10" />
