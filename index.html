@@ -6,6 +6,12 @@
     body {
       flex flex-col h-full bg-[#111827] text-white font-sans
     }
+    #app {
+      flex flex-row h-full w-full
+    }
+    #sidebar {
+      w-64 bg-[#0b1220] border-r border-[#374151] flex flex-col
+    }
     #chat {
       p-4 gap-4
     }
@@ -20,11 +26,20 @@
 </head>
 
 <body style="h-full w-full">
-  <pre id="chat" style="h-46 m-4">_</pre>
-  <!-- DO NOT REMOVE THAT UNDERSCORE OVER THERE, gurted quirks -->
-  <div id="input-bar" style="">
-    <input id="input" type="text" placeholder="Type a message..." style="w-[140%] h-10" />
-    <button id="send" style="bg-[#fff] text-black px-4 py-2 rounded-lg hover:bg-[#2563eb] h-10">Send</button>
-    <button id="clear-chat" style="bg-[#ff0000] text-white px-4 py-2 rounded-lg hover:bg-[#880000] h-10">New Chat</button>
+  <div id="app">
+    <div id="sidebar">
+      <div style="p-3 border-b border-[#374151]">
+        <button id="new-chat" style="w-full bg-[#2563eb] text-white px-3 py-2 rounded hover:bg-[#1d4ed8]">+ New Chat</button>
+      </div>
+      <div id="chat-list" style="flex flex-col p-2 gap-2 overflow-auto"></div>
+    </div>
+    <div id="main" style="flex flex-col flex-1 h-full">
+      <pre id="chat" style="flex-1 m-4 overflow-auto">_</pre>
+      <!-- DO NOT REMOVE THAT UNDERSCORE OVER THERE, gurted quirks -->
+      <div id="input-bar" style="">
+        <input id="input" type="text" placeholder="Type a message..." style="flex-1 h-10" />
+        <button id="send" style="bg-[#fff] text-black px-4 py-2 rounded-lg hover:bg-[#2563eb] h-10">Send</button>
+      </div>
+    </div>
   </div>
 </body>
