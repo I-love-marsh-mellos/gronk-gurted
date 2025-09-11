@@ -4,7 +4,7 @@ local clearChat = gurt.select('#clear-chat')
 local input = gurt.select('#input')
 local history = {}
 local inputBar = gurt.select("#input-bar");
-local chat = gurt.select('#chat')
+chat = gurt.select('#chat')
 local inputFocused = false;
 
 -- all messages live in here
